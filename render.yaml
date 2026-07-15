@@ -1,0 +1,13 @@
+# Render Blueprint YAML
+services:
+  - type: web
+    name: maxxloan
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    plan: free
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
