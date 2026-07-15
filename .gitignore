@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+# dotenv
+.env
+env/
+venv/
+.venv/
+instance/
+# VS Code
+.vscode/
+# OS
+.DS_Store
+Thumbs.db
+# Node
+node_modules/
+
+# Editor configs
+.vscode/
+.idea/
